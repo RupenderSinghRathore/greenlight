@@ -10,6 +10,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+type envelope map[string]any
+
 func readIdParams(r *http.Request) (int64, error) {
 	params := httprouter.ParamsFromContext(r.Context())
 
@@ -21,10 +23,11 @@ func readIdParams(r *http.Request) (int64, error) {
 }
 
 func writeJSON(w http.ResponseWriter, status int, data any, headers http.Header) error {
-	js, err := json.Marshal(data)
+	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
 	}
+	js = append(js, '\n')
 	maps.Copy(w.Header(), headers)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)

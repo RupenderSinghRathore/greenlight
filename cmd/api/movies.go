@@ -7,19 +7,20 @@ import (
 	"github.com/RupenderSinghRathore/greenlight/internal/data"
 )
 
-func (app *application) createMovieHandler(w http.ResponseWriter, r *http.Request) {
+func (app application) createMovieHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "create a new movie")
 }
-func (app *application) showMovieHandler(w http.ResponseWriter, r *http.Request) {
+func (app application) showMovieHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := readIdParams(r)
 	if err != nil {
 		http.NotFound(w, r)
 		return
 	}
 	movie := data.Movie{
-		ID: id,
+		ID:      id,
+		Runtime: 120,
 	}
-	err = writeJSON(w, http.StatusOK, movie, nil)
+	err = writeJSON(w, http.StatusOK, envelope{"movie": movie}, nil)
 	if err != nil {
 		// NOTE: handle error
 	}
